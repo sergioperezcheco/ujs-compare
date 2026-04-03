@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>江苏大学2025年江苏 vs 北京 分专业分数差</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; }
+    .diff-positive { color: #ef4444; }
+    .diff-negative { color: #22c55e; }
+    .diff-zero { color: #6b7280; }
+    .card { transition: transform 0.2s; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-blue-800 text-white py-8">
+    <div class="max-w-6xl mx-auto px-6">
+      <h1 class="text-3xl font-bold mb-2">江苏大学 2025年</h1>
+      <p class="text-blue-200 text-lg">江苏考生 vs 北京考生 · 分专业录取分数差</p>
+      <p class="text-blue-300 text-sm mt-2">数据来源：江苏大学本科招生信息网 · 仅展示两年均有招生的专业</p>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-10">
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div class="bg-white rounded-2xl p-6 shadow card">
+        <p class="text-gray-500 text-sm mb-1">江苏招生专业数</p>
+        <p class="text-3xl font-bold text-blue-800" id="stat-js">80+</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow card">
+        <p class="text-gray-500 text-sm mb-1">北京招生专业数</p>
+        <p class="text-3xl font-bold text-blue-800" id="stat-bj">5</p>
+      </div>
+      <div class="bg-white rounded-2xl p-6 shadow card">
+        <p class="text-gray-500 text-sm mb-1">可比较专业数</p>
+        <p class="text-3xl font-bold text-blue-800" id="stat-comp">5</p>
+      </div>
+    </div>
+
+    <!-- Info Banner -->
+    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-8 text-sm text-blue-800">
+      <p><strong>说明：</strong>分数差 = <strong>北京最低分 - 江苏最低分</strong>（同专业）。差值为正说明北京录取分更高，差值为负说明江苏录取分更高。</p>
+    </div>
+
+    <!-- Table Section -->
+    <div class="bg-white rounded-2xl shadow overflow-hidden mb-10">
+      <div class="bg-blue-800 text-white px-6 py-4">
+        <h2 class="text-xl font-bold">📊 分专业分数对比表</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b">
+            <tr>
+              <th class="px-4 py-3 text-left font-semibold text-gray-600">选科要求</th>
+              <th class="px-4 py-3 text-left font-semibold text-gray-600">专业名称</th>
+              <th class="px-4 py-3 text-center font-semibold text-gray-600">江苏最低分</th>
+              <th class="px-4 py-3 text-center font-semibold text-gray-600">北京最低分</th>
+              <th class="px-4 py-3 text-center font-semibold text-gray-600">分数差</th>
+              <th class="px-4 py-3 text-center font-semibold text-gray-600">趋势</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <!-- filled by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+      <!-- Bar Chart -->
+      <div class="bg-white rounded-2xl shadow p-6">
+        <h2 class="text-lg font-bold text-gray-800 mb-4">📈 分专业分数对比图</h2>
+        <canvas id="barChart" height="280"></canvas>
+      </div>
+      <!-- Difference Chart -->
+      <div class="bg-white rounded-2xl shadow p-6">
+        <h2 class="text-lg font-bold text-gray-800 mb-4">📉 分数差值（江苏−北京）</h2>
+        <canvas id="diffChart" height="280"></canvas>
+      </div>
+    </div>
+
+    <!-- Detail Cards -->
+    <div class="bg-white rounded-2xl shadow overflow-hidden mb-8">
+      <div class="bg-blue-800 text-white px-6 py-4">
+        <h2 class="text-xl font-bold">💡 分析与发现</h2>
+      </div>
+      <div class="p-6 space-y-4 text-sm text-gray-700">
+        <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded">
+          <p class="font-semibold text-red-700">🚨 最大差专业：计算机科学与技术</p>
+          <p>江苏最低604分 vs 北京最低582分，差值 <strong>+22分</strong>（北京更易考）</p>
+        </div>
+        <div class="bg-orange-50 border-l-4 border-orange-400 p-4 rounded">
+          <p class="font-semibold text-orange-700">📌 值得关注的发现</p>
+          <ul class="list-disc list-inside mt-1 space-y-1">
+            <li>北京不限科目专业（国际经济与贸易/日语/物流管理）分数差异明显低于江苏，说明北京考生上江苏大学更容易</li>
+            <li>能源与动力工程(吴仲华班)在两省分数接近，差值仅+1分</li>
+            <li>北京招生规模极小（每专业仅2人），存在报考偶然性，分数波动较大</li>
+          </ul>
+        </div>
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+          <p class="font-semibold text-blue-700">⚠️ 仅供参考</p>
+          <p>北京2025年高考人数约5.5万，江苏约40万。江苏竞争激烈程度远大于北京，但江苏大学在江苏省内投放计划更多、招生专业也更全面。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Source -->
+    <div class="text-center text-gray-400 text-xs mt-6">
+      <p>数据来源：江苏大学本科招生信息网 · zb.ujs.edu.cn</p>
+      <p>本页面仅供个人参考，请以学校官方数据为准</p>
+    </div>
+
+  </main>
+
+  <script>
+    // Data: only majors with enrollment in BOTH Jiangsu and Beijing
+    const data = [
+      {
+        subject: "物理+化学",
+        major: "计算机科学与技术",
+        jiangsu: 604,
+        beijing: 582,
+        note: "江苏：专业组20（物+化）/ 北京：物理+化学"
+      },
+      {
+        subject: "物理+化学",
+        major: "能源与动力工程(吴仲华班)",
+        jiangsu: 580,
+        beijing: 581,
+        note: "江苏：专业组23 / 北京：物理+化学"
+      },
+      {
+        subject: "不限",
+        major: "国际经济与贸易",
+        jiangsu: 573,
+        beijing: 546,
+        note: "江苏：专业组01（历史+不限）/ 北京：不提科目要求"
+      },
+      {
+        subject: "不限",
+        major: "日语",
+        jiangsu: 572,
+        beijing: 531,
+        note: "江苏：专业组01（历史+不限）/ 北京：不提科目要求"
+      },
+      {
+        subject: "不限",
+        major: "物流管理",
+        jiangsu: 572,
+        beijing: 491,
+        note: "江苏：专业组01（历史+不限）/ 北京：不提科目要求"
+      },
+    ];
+
+    // Fill table
+    const tbody = document.getElementById("table-body");
+    data.forEach((d, i) => {
+      const diff = d.beijing - d.jiangsu;
+      const diffClass = diff > 0 ? "diff-positive" : diff < 0 ? "diff-negative" : "diff-zero";
+      const arrow = diff > 0 ? "↑ 北京更高" : diff < 0 ? "↓ 江苏更高" : "＝ 持平";
+      const row = `
+        <tr class="border-b hover:bg-gray-50">
+          <td class="px-4 py-3">
+            <span class="px-2 py-1 rounded text-xs font-medium ${d.subject === '物理+化学' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}">${d.subject}</span>
+          </td>
+          <td class="px-4 py-3 font-medium text-gray-800">${d.major}</td>
+          <td class="px-4 py-3 text-center font-bold text-red-600">${d.jiangsu}</td>
+          <td class="px-4 py-3 text-center font-bold text-blue-600">${d.beijing}</td>
+          <td class="px-4 py-3 text-center font-bold ${diffClass}">${diff > 0 ? '+' : ''}${diff}</td>
+          <td class="px-4 py-3 text-center text-xs ${diffClass}">${arrow}</td>
+        </tr>
+      `;
+      tbody.innerHTML += row;
+    });
+
+    // Bar Chart
+    const ctx = document.getElementById("barChart").getContext("2d");
+    const labels = data.map(d => d.major);
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "江苏最低分",
+            data: data.map(d => d.jiangsu),
+            backgroundColor: "rgba(239, 68, 68, 0.7)",
+            borderRadius: 6,
+          },
+          {
+            label: "北京最低分",
+            data: data.map(d => d.beijing),
+            backgroundColor: "rgba(59, 130, 246, 0.7)",
+            borderRadius: 6,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: "top" },
+          tooltip: { mode: "index", intersect: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: false,
+            min: 450,
+            ticks: { stepSize: 20 }
+          }
+        }
+      }
+    });
+
+    // Diff Chart
+    const dctx = document.getElementById("diffChart").getContext("2d");
+    const diffs = data.map(d => d.beijing - d.jiangsu);
+    const colors = diffs.map(d => d >= 0 ? "rgba(239, 68, 68, 0.7)" : "rgba(34, 197, 94, 0.7)");
+    new Chart(dctx, {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "分数差（北京 - 江苏）",
+            data: diffs,
+            backgroundColor: colors,
+            borderRadius: 6,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => `差值: ${ctx.raw > 0 ? '+' : ''}${ctx.raw} 分`
+            }
+          }
+        },
+        scales: {
+          y: {
+            ticks: {
+              stepSize: 10,
+              callback: v => (v > 0 ? "+" : "") + v
+            }
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
