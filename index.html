@@ -3,209 +3,276 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>江苏大学2025年 江苏 vs 浙江 vs 天津 分专业分数对比</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>江苏大学2025年 江苏 vs 浙江 vs 天津 vs 北京 分专业分数对比</title>
   <style>
-    body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; }
-    .card { transition: transform 0.2s; }
-    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
-    .tag-physics { background: #dbeafe; color: #1d4ed8; }
-    .tag-history { background: #fef3c7; color: #92400e; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f3f4f6; min-height: 100vh; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    .header { background: #1e40af; color: white; padding: 2rem 0; }
+    .header h1 { font-size: 1.875rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .header p { font-size: 1.125rem; color: #bfdbfe; }
+    .header .source { font-size: 0.875rem; color: #93c5fd; margin-top: 0.5rem; }
+    .main { padding: 2.5rem 0; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .card { background: white; border-radius: 1rem; padding: 1.25rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); transition: all 0.2s; }
+    .card .label { font-size: 0.75rem; color: #6b7280; margin-bottom: 0.25rem; }
+    .card .value { font-size: 1.75rem; font-weight: 700; }
+    .card .sub { font-size: 0.7rem; color: #9ca3af; margin-top: 0.25rem; }
+    .purple { color: #7c3aed; }
+    .red { color: #dc2626; }
+    .green { color: #16a34a; }
+    .blue { color: #2563eb; }
+    .orange { color: #ea580c; }
+    .banner { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 0.75rem; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.875rem; color: #1e40af; line-height: 1.6; }
+    .tabs { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .tab { padding: 0.5rem 1.25rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; cursor: pointer; border: none; }
+    .tab.active-blue { background: #1e40af; color: white; }
+    .tab.inactive { background: #e5e7eb; color: #374151; }
+    .tab.inactive:hover { background: #d1d5db; }
+    .tab.active-orange { background: #ea580c; color: white; }
+    .table-wrap { background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+    .table-header { padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .table-header.blue { background: #1e40af; color: white; }
+    .table-header.orange { background: #ea580c; color: white; }
+    .table-header h2 { font-size: 1.125rem; font-weight: 700; }
+    .table-header .hint { font-size: 0.875rem; opacity: 0.75; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+    thead { background: #f9fafb; border-bottom: 1px solid #e5e7eb; }
+    th { padding: 0.625rem 0.75rem; text-align: center; font-weight: 600; color: #374151; white-space: nowrap; }
+    th.left { text-align: left; }
+    tbody tr { border-bottom: 1px solid #f3f4f6; }
+    tbody tr:hover { background: #f9fafb; }
+    td { padding: 0.625rem 0.75rem; text-align: center; }
+    td.left { text-align: left; font-weight: 500; color: #1f2937; }
+    td.province { font-weight: 700; }
+    .diff-red { color: #dc2626; font-weight: 600; }
+    .diff-green { color: #16a34a; font-weight: 600; }
+    .diff-gray { color: #9ca3af; }
+    .chart-wrap { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+    .chart-wrap h2 { font-size: 1.125rem; font-weight: 700; color: #1f2937; margin-bottom: 1rem; }
+    .findings { background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+    .findings-header { background: #1e40af; color: white; padding: 1rem 1.5rem; font-size: 1.125rem; font-weight: 700; }
+    .findings-body { padding: 1.5rem; display: grid; gap: 1rem; }
+    .finding { padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; line-height: 1.6; }
+    .finding.red { background: #fef2f2; border-left: 4px solid #dc2626; }
+    .finding.orange { background: #fff7ed; border-left: 4px solid #ea580c; }
+    .finding.green { background: #f0fdf4; border-left: 4px solid #16a34a; }
+    .finding.blue { background: #eff6ff; border-left: 4px solid #2563eb; }
+    .finding strong { display: block; margin-bottom: 0.25rem; }
+    .footer { text-align: center; color: #9ca3af; font-size: 0.75rem; padding: 1.5rem 0; }
+    .hidden { display: none; }
+    canvas { max-width: 100%; }
+    @media (max-width: 640px) {
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      table { font-size: 0.75rem; }
+      th, td { padding: 0.4rem 0.3rem; }
+    }
   </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body>
 
-  <!-- Header -->
-  <header class="bg-blue-800 text-white py-8">
-    <div class="max-w-6xl mx-auto px-6">
-      <h1 class="text-3xl font-bold mb-2">江苏大学 2025年</h1>
-      <p class="text-blue-200 text-lg">江苏 vs 浙江 vs 天津 · 分专业录取分数对比</p>
-      <p class="text-blue-300 text-sm mt-2">数据来源：江苏大学本科招生信息网 · 仅展示三省均有招生的专业</p>
+  <header class="header">
+    <div class="container">
+      <h1>江苏大学 2025年</h1>
+      <p>江苏 vs 浙江 vs 天津 vs 北京 · 分专业录取分数对比</p>
+      <p class="source">数据来源：江苏大学本科招生信息网 · 物理+化学类 / 历史+不限类</p>
     </div>
   </header>
 
-  <main class="max-w-6xl mx-auto px-6 py-10">
+  <main class="main">
+    <div class="container">
 
-    <!-- Summary Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-      <div class="bg-white rounded-2xl p-5 shadow card text-center">
-        <p class="text-gray-500 text-xs mb-1">可比较专业数</p>
-        <p class="text-2xl font-bold text-blue-800">30</p>
-        <p class="text-xs text-gray-400 mt-1">物理类24·历史类6</p>
-      </div>
-      <div class="bg-white rounded-2xl p-5 shadow card text-center">
-        <p class="text-gray-500 text-xs mb-1">浙江最高分</p>
-        <p class="text-2xl font-bold text-purple-600">636</p>
-        <p class="text-xs text-gray-400">法学</p>
-      </div>
-      <div class="bg-white rounded-2xl p-5 shadow card text-center">
-        <p class="text-gray-500 text-xs mb-1">江苏最高分</p>
-        <p class="text-2xl font-bold text-red-600">621</p>
-        <p class="text-xs text-gray-400">临床医学/电子信息工程</p>
-      </div>
-      <div class="bg-white rounded-2xl p-5 shadow card text-center">
-        <p class="text-gray-500 text-xs mb-1">天津最高分</p>
-        <p class="text-2xl font-bold text-green-600">615</p>
-        <p class="text-xs text-gray-400">电气工程及其自动化</p>
-      </div>
-    </div>
-
-    <!-- Info Banner -->
-    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-8 text-sm text-blue-800">
-      <p><strong>说明：</strong>浙江采用"3+1+2"新高考模式（综合），江苏和天津采用"3+3"模式。同一专业在不同省份的选科要求可能不同，分数不可直接横向对比，仅供趋势参考。</p>
-    </div>
-
-    <!-- Filter Tabs -->
-    <div class="flex gap-3 mb-6">
-      <button onclick="showTab('physics')" id="btn-physics" class="px-5 py-2 rounded-full font-medium text-sm bg-blue-800 text-white">物理+化学 (24专业)</button>
-      <button onclick="showTab('history')" id="btn-history" class="px-5 py-2 rounded-full font-medium text-sm bg-gray-200 text-gray-600 hover:bg-gray-300">历史+不限 (6专业)</button>
-    </div>
-
-    <!-- Physics Table -->
-    <div id="tab-physics" class="bg-white rounded-2xl shadow overflow-hidden mb-10">
-      <div class="bg-blue-800 text-white px-6 py-4 flex justify-between items-center">
-        <h2 class="text-xl font-bold">📊 物理+化学类 分专业分数对比</h2>
-        <span class="text-blue-200 text-sm">分数越高 → 该省录取难度越大</span>
-      </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead class="bg-gray-50 border-b">
-            <tr>
-              <th class="px-4 py-3 text-left font-semibold text-gray-600">专业名称</th>
-              <th class="px-4 py-3 text-center font-semibold text-purple-600">浙江<br><span class="font-normal text-xs text-gray-400">综合</span></th>
-              <th class="px-4 py-3 text-center font-semibold text-red-600">江苏<br><span class="font-normal text-xs text-gray-400">物理+化学</span></th>
-              <th class="px-4 py-3 text-center font-semibold text-green-600">天津<br><span class="font-normal text-xs text-gray-400">物理+化学</span></th>
-              <th class="px-4 py-3 text-center font-semibold text-gray-600">浙江−江苏</th>
-              <th class="px-4 py-3 text-center font-semibold text-gray-600">浙江−天津</th>
-              <th class="px-4 py-3 text-center font-semibold text-gray-600">江苏−天津</th>
-            </tr>
-          </thead>
-          <tbody id="physics-body"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- History Table -->
-    <div id="tab-history" class="hidden bg-white rounded-2xl shadow overflow-hidden mb-10">
-      <div class="bg-orange-700 text-white px-6 py-4 flex justify-between items-center">
-        <h2 class="text-xl font-bold">📊 历史+不限类 分专业分数对比</h2>
-        <span class="text-orange-200 text-sm">分数越高 → 该省录取难度越大</span>
-      </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead class="bg-gray-50 border-b">
-            <tr>
-              <th class="px-4 py-3 text-left font-semibold text-gray-600">专业名称</th>
-              <th class="px-4 py-3 text-center font-semibold text-purple-600">浙江<br><span class="font-normal text-xs text-gray-400">综合</span></th>
-              <th class="px-4 py-3 text-center font-semibold text-red-600">江苏<br><span class="font-normal text-xs text-gray-400">历史+不限</span></th>
-              <th class="px-4 py-3 text-center font-semibold text-green-600">天津<br><span class="font-normal text-xs text-gray-400">不限</span></th>
-              <th class="px-4 py-3 text-center font-semibold text-gray-600">浙江−江苏</th>
-              <th class="px-4 py-3 text-center font-semibold text-gray-600">浙江−天津</th>
-              <th class="px-4 py-3 text-center font-semibold text-gray-600">江苏−天津</th>
-            </tr>
-          </thead>
-          <tbody id="history-body"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Chart -->
-    <div class="bg-white rounded-2xl shadow p-6 mb-10">
-      <h2 class="text-lg font-bold text-gray-800 mb-4">📈 三省份分数对比（物理+化学类，截取前15个专业）</h2>
-      <canvas id="mainChart" height="320"></canvas>
-    </div>
-
-    <!-- Findings -->
-    <div class="bg-white rounded-2xl shadow overflow-hidden mb-8">
-      <div class="bg-blue-800 text-white px-6 py-4">
-        <h2 class="text-xl font-bold">💡 分析与发现</h2>
-      </div>
-      <div class="p-6 space-y-4 text-sm text-gray-700">
-        <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded">
-          <p class="font-semibold text-red-700">📌 浙江整体录取难度最高</p>
-          <p>在绝大多数专业上，浙江录取分数明显高于江苏和天津。这与浙江新高考"3+1+2"模式及志愿填报规则有关——浙江考生基数大，竞争激烈程度更高。</p>
+      <!-- Summary Cards -->
+      <div class="cards">
+        <div class="card">
+          <div class="label">可比较专业数</div>
+          <div class="value blue">30+</div>
+          <div class="sub">物理类24·历史类6</div>
         </div>
-        <div class="bg-orange-50 border-l-4 border-orange-400 p-4 rounded">
-          <p class="font-semibold text-orange-700">📌 江苏与天津分数接近</p>
-          <p>江苏和天津在大部分专业上分数差距在10分以内。两地考生数量和高考难度结构不同，但江苏大学对两地的招生分数相近。</p>
+        <div class="card">
+          <div class="label">浙江最高分</div>
+          <div class="value purple">636</div>
+          <div class="sub">法学/知识产权</div>
         </div>
-        <div class="bg-green-50 border-l-4 border-green-400 p-4 rounded">
-          <p class="font-semibold text-green-700">📌 临床医学：江苏 vs 天津差值最大</p>
-          <p>临床医学专业在江苏（596分）和天津（588分）差8分，在浙江高达621分。医学类专业在浙江报考热度极高。</p>
+        <div class="card">
+          <div class="label">江苏最高分</div>
+          <div class="value red">621</div>
+          <div class="sub">临床医学等</div>
         </div>
-        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-          <p class="font-semibold text-blue-700">⚠️ 仅供参考</p>
-          <p>浙江采用"3+1+2"新高考满分750分，江苏满分750分，天津满分750分，但各省分数线差异受考生数量、招生计划、志愿填报规则等多重因素影响，不能简单以分数高低判断录取难度。</p>
+        <div class="card">
+          <div class="label">天津最高分</div>
+          <div class="value green">615</div>
+          <div class="sub">电气工程及其自动化</div>
+        </div>
+        <div class="card">
+          <div class="label">北京最高分</div>
+          <div class="value orange">582</div>
+          <div class="sub">计算机/能源与动力</div>
         </div>
       </div>
-    </div>
 
-    <!-- Data Source -->
-    <div class="text-center text-gray-400 text-xs mt-6">
-      <p>数据来源：江苏大学本科招生信息网 · zb.ujs.edu.cn</p>
-      <p>浙江数据来源：大考100 · 天津数据来源：江苏大学本科招生网</p>
-      <p>本页面仅供个人参考，请以学校官方数据为准</p>
-    </div>
+      <!-- Banner -->
+      <div class="banner">
+        <strong>说明：</strong>浙江采用"3+1+2"新高考模式（综合），江苏/天津/北京采用"3+3"模式。同一专业在不同省份选科要求可能不同，分数仅供趋势参考。北京招生专业极少（仅5个），仅供参考。
+      </div>
 
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active-blue" id="btn-physics" onclick="showTab('physics')">物理+化学类 (24专业)</button>
+        <button class="tab inactive" id="btn-history" onclick="showTab('history')">历史+不限类 (6专业)</button>
+      </div>
+
+      <!-- Physics Table -->
+      <div id="tab-physics" class="table-wrap">
+        <div class="table-header blue">
+          <h2>📊 物理+化学类 分专业分数对比</h2>
+          <span class="hint">分数越高 → 该省录取难度越大</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th class="left">专业名称</th>
+                <th>浙江<br><span style="font-weight:400;font-size:0.7rem;color:#9ca3af">综合</span></th>
+                <th>江苏<br><span style="font-weight:400;font-size:0.7rem;color:#9ca3af">物理+化学</span></th>
+                <th>天津<br><span style="font-weight:400;font-size:0.7rem;color:#9ca3af">物理+化学</span></th>
+                <th>北京<br><span style="font-weight:400;font-size:0.7rem;color:#9ca3af">物理+化学</span></th>
+                <th>浙−苏</th>
+                <th>浙−津</th>
+                <th>浙−京</th>
+              </tr>
+            </thead>
+            <tbody id="physics-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- History Table -->
+      <div id="tab-history" class="hidden table-wrap">
+        <div class="table-header orange">
+          <h2>📊 历史+不限类 分专业分数对比</h2>
+          <span class="hint">分数越高 → 该省录取难度越大</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th class="left">专业名称</th>
+                <th>浙江<br><span style="font-weight:400;font-size:0.7rem;color:#9ca3af">综合</span></th>
+                <th>江苏<br><span style="font-weight:400;font-size:0.7rem;color:#9ca3af">历史+不限</span></th>
+                <th>天津<br><span style="font-weight:400;font-size:0.7rem;color:#9ca3af">不限</span></th>
+                <th>浙−苏</th>
+                <th>浙−津</th>
+              </tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div class="chart-wrap">
+        <h2>📈 三省份分数对比（物理+化学类前15专业）</h2>
+        <canvas id="mainChart"></canvas>
+      </div>
+
+      <!-- Findings -->
+      <div class="findings">
+        <div class="findings-header">💡 分析与发现</div>
+        <div class="findings-body">
+          <div class="finding red">
+            <strong class="red">📌 浙江整体录取难度最高</strong>
+            在绝大多数专业上，浙江录取分数明显高于江苏和天津。浙江新高考"3+1+2"模式、考生基数大、志愿填报规则等因素导致竞争激烈程度更高。
+          </div>
+          <div class="finding orange">
+            <strong class="orange">📌 北京招生专业极少，仅5个专业可比较</strong>
+            北京（物理+化学）仅有计算机科学与技术、能源与动力工程(吴仲华班)两个专业参与对比，分数显著低于其他三省。
+          </div>
+          <div class="finding green">
+            <strong class="green">📌 江苏与天津分数较接近</strong>
+            在物理+化学类专业上，江苏和天津大部分专业分数差距在10分以内，两省录取难度结构相近。
+          </div>
+          <div class="finding blue">
+            <strong class="blue">⚠️ 仅供参考</strong>
+            各地高考模式、满分、考生数量、招生计划均不同，分数差值仅供参考，不宜直接横向对比录取难度。
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>数据来源：江苏大学本科招生信息网 · zb.ujs.edu.cn</p>
+        <p>浙江数据来源：大考100 · 天津数据来源：江苏大学本科招生网</p>
+        <p>本页面仅供个人参考，请以学校官方数据为准</p>
+      </div>
+
+    </div>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script>
-    // ========== DATA ==========
-    // 物理+化学类专业 (浙江 浙江位次 江苏 天津)
+    // 北京2025年（物理+化学）
+    const beijingPhysics = {
+      "计算机科学与技术": 582,
+      "能源与动力工程(吴仲华班)": 581,
+    };
+
+    // 北京2025年（不限）
+    const beijingNoReq = {
+      "国际经济与贸易": 546,
+      "日语": 531,
+      "物流管理": 491,
+    };
+
+    // 物理+化学类专业
     const physicsData = [
-      { major: "计算机科学与技术",       zj: 635, zjRank: 19521, js: 604, tj: 607 },
-      { major: "软件工程",               zj: 626, zjRank: 26330, js: 602, tj: 604 },
-      { major: "电子信息工程",           zj: 621, zjRank: 30567, js: 598, tj: 608 },
-      { major: "自动化",                zj: 619, zjRank: 32226, js: 597, tj: 608 },
-      { major: "通信工程",               zj: 618, zjRank: 33616, js: 601, tj: 608 },
-      { major: "电气工程及其自动化",      zj: 629, zjRank: 23933, js: 601, tj: 613 },
-      { major: "机械设计制造及其自动化",  zj: 617, zjRank: 34672, js: 593, tj: 605 },
-      { major: "智能制造工程",           zj: 615, zjRank: 36094, js: 590, tj: 606 },
-      { major: "临床医学",               zj: 621, zjRank: 30882, js: 596, tj: 588 },
-      { major: "能源与动力工程",          zj: 612, zjRank: 38962, js: 597, tj: 601 },
-      { major: "新能源科学与工程",        zj: 614, zjRank: 37205, js: 597, tj: 605 },
-      { major: "测控技术与仪器",         zj: 616, zjRank: 35775, js: 591, tj: 605 },
-      { major: "车辆工程",               zj: 614, zjRank: 37043, js: 590, tj: 607 },
-      { major: "智能科学与技术",          zj: 615, zjRank: 35892, js: 598, tj: null },
-      { major: "机器人工程",             zj: 619, zjRank: 32452, js: 598, tj: null },
-      { major: "光电信息科学与工程",      zj: 618, zjRank: 33340, js: 597, tj: null },
-      { major: "微电子科学与工程",        zj: 616, zjRank: 34891, js: 598, tj: null },
-      { major: "材料成型及控制工程",      zj: 604, zjRank: 47107, js: 582, tj: 598 },
-      { major: "化学类",                 zj: 596, zjRank: 56153, js: 581, tj: 589 },
-      { major: "食品科学与工程类",        zj: 600, zjRank: 51776, js: 582, tj: 596 },
-      { major: "药学类",                zj: 594, zjRank: 58428, js: 576, tj: 596 },
-      { major: "医学检验技术",           zj: 595, zjRank: 57423, js: 588, tj: 593 },
-      { major: "医学影像学",             zj: 608, zjRank: 43161, js: 581, tj: 601 },
-      { major: "应急技术与管理",          zj: 592, zjRank: 60460, js: 576, tj: 588 },
-      { major: "交通运输",               zj: 604, zjRank: 47796, js: 590, tj: 589 },
-      { major: "交通工程",               zj: 602, zjRank: 49278, js: 593, tj: 589 },
-      { major: "智能建造",               zj: 605, zjRank: 46582, js: 577, tj: 589 },
-      { major: "农业机械化及其自动化",    zj: 605, zjRank: 46263, js: 587, tj: 600 },
-      { major: "农业智能装备工程",        zj: 605, zjRank: 46461, js: 586, tj: 596 },
-      { major: "物理学",                 zj: 598, zjRank: 53620, js: null,  tj: 594 },
+      { major: "计算机科学与技术",       zj: 635, js: 604, tj: 607, bj: 582 },
+      { major: "软件工程",               zj: 626, js: 602, tj: 604, bj: null },
+      { major: "电子信息工程",           zj: 621, js: 598, tj: 608, bj: null },
+      { major: "自动化",                zj: 619, js: 597, tj: 608, bj: null },
+      { major: "通信工程",               zj: 618, js: 601, tj: 608, bj: null },
+      { major: "电气工程及其自动化",      zj: 629, js: 601, tj: 613, bj: null },
+      { major: "机械设计制造及其自动化",  zj: 617, js: 593, tj: 605, bj: null },
+      { major: "智能制造工程",           zj: 615, js: 590, tj: 606, bj: null },
+      { major: "临床医学",               zj: 621, js: 596, tj: 588, bj: null },
+      { major: "能源与动力工程",          zj: 612, js: 597, tj: 601, bj: 581 },
+      { major: "新能源科学与工程",        zj: 614, js: 597, tj: 605, bj: null },
+      { major: "测控技术与仪器",         zj: 616, js: 591, tj: 605, bj: null },
+      { major: "车辆工程",               zj: 614, js: 590, tj: 607, bj: null },
+      { major: "材料成型及控制工程",      zj: 604, js: 582, tj: 598, bj: null },
+      { major: "化学类",                 zj: 596, js: 581, tj: 589, bj: null },
+      { major: "食品科学与工程类",        zj: 600, js: 582, tj: 596, bj: null },
+      { major: "药学类",                zj: 594, js: 576, tj: 596, bj: null },
+      { major: "医学检验技术",           zj: 595, js: 588, tj: 593, bj: null },
+      { major: "医学影像学",             zj: 608, js: 581, tj: 601, bj: null },
+      { major: "应急技术与管理",          zj: 592, js: 576, tj: 588, bj: null },
+      { major: "交通运输",               zj: 604, js: 590, tj: 589, bj: null },
+      { major: "交通工程",               zj: 602, js: 593, tj: 589, bj: null },
+      { major: "智能建造",               zj: 605, js: 577, tj: 589, bj: null },
+      { major: "农业机械化及其自动化",    zj: 605, js: 587, tj: 600, bj: null },
     ];
 
     // 历史+不限类专业
     const historyData = [
-      { major: "国际经济与贸易",  zj: 626, zjRank: 26510, js: 573, tj: 585 },
-      { major: "英语",            zj: 617, zjRank: 34475, js: 574, tj: 586 },
-      { major: "人力资源管理",    zj: 610, zjRank: 41494, js: 574, tj: 580 },
-      { major: "公共事业管理",    zj: 613, zjRank: 38108, js: 573, tj: 583 },
-      { major: "知识产权",        zj: 635, zjRank: 20031, js: 579, tj: 585 },
+      { major: "国际经济与贸易",  zj: 626, js: 573, tj: 585, bj: 546 },
+      { major: "英语",            zj: 617, js: 574, tj: 586, bj: 531 },
+      { major: "人力资源管理",    zj: 610, js: 574, tj: 580, bj: null },
+      { major: "公共事业管理",    zj: 613, js: 573, tj: 583, bj: null },
+      { major: "知识产权",        zj: 635, js: 579, tj: 585, bj: null },
     ];
 
-    // ========== RENDER TABLES ==========
     function diffClass(a, b) {
-      if (a === null || b === null) return 'text-gray-400';
+      if (a === null || b === null) return '';
       const d = a - b;
-      if (d > 5) return 'text-red-500';
-      if (d < -5) return 'text-green-500';
-      return 'text-gray-500';
+      if (Math.abs(d) <= 3) return 'diff-gray';
+      return d > 0 ? 'diff-red' : 'diff-green';
     }
 
-    function fmtCell(v, fallback) {
-      return v !== null && v !== undefined ? v : '—';
+    function fmt(v) { return v !== null && v !== undefined ? v : '—'; }
+    function diffFmt(a, b) {
+      if (a === null || b === null) return '—';
+      const d = a - b;
+      return (d > 0 ? '+' : '') + d;
     }
 
     function renderPhysicsTable() {
@@ -213,20 +280,20 @@
       tbody.innerHTML = '';
       physicsData.forEach(d => {
         const zjDiffJs = d.zj - d.js;
-        const zjDiffTj = d.tj !== null ? d.zj - d.tj : null;
-        const jsDiffTj = (d.js !== null && d.tj !== null) ? d.js - d.tj : null;
-        const row = `
-          <tr class="border-b hover:bg-gray-50">
-            <td class="px-4 py-3 font-medium text-gray-800 text-xs">${d.major}</td>
-            <td class="px-4 py-3 text-center font-bold text-purple-600 text-sm">${d.zj}</td>
-            <td class="px-4 py-3 text-center font-bold text-red-600 text-sm">${fmtCell(d.js, '-')}</td>
-            <td class="px-4 py-3 text-center font-bold text-green-600 text-sm">${fmtCell(d.tj, '-')}</td>
-            <td class="px-4 py-3 text-center text-xs ${diffClass(d.zj, d.js)}">${zjDiffJs > 0 ? '+' : ''}${zjDiffJs}</td>
-            <td class="px-4 py-3 text-center text-xs ${zjDiffTj !== null ? diffClass(d.zj, d.tj) : 'text-gray-300'}">${zjDiffTj !== null ? (zjDiffTj > 0 ? '+' : '') + zjDiffTj : '—'}</td>
-            <td class="px-4 py-3 text-center text-xs ${jsDiffTj !== null ? diffClass(d.js, d.tj) : 'text-gray-300'}">${jsDiffTj !== null ? (jsDiffTj > 0 ? '+' : '') + jsDiffTj : '—'}</td>
+        const zjDiffTj = d.zj - d.tj;
+        const zjDiffBj = d.bj !== null ? d.zj - d.bj : null;
+        tbody.innerHTML += `
+          <tr>
+            <td class="left">${d.major}</td>
+            <td class="province purple">${d.zj}</td>
+            <td class="province red">${fmt(d.js)}</td>
+            <td class="province green">${fmt(d.tj)}</td>
+            <td class="${d.bj !== null ? 'province orange' : ''}">${fmt(d.bj)}</td>
+            <td class="${diffClass(d.zj, d.js)}">${diffFmt(d.zj, d.js)}</td>
+            <td class="${diffClass(d.zj, d.tj)}">${diffFmt(d.zj, d.tj)}</td>
+            <td class="${zjDiffBj !== null ? diffClass(d.zj, d.bj) : 'diff-gray'}">${zjDiffBj !== null ? diffFmt(d.zj, d.bj) : '—'}</td>
           </tr>
         `;
-        tbody.innerHTML += row;
       });
     }
 
@@ -234,78 +301,50 @@
       const tbody = document.getElementById('history-body');
       tbody.innerHTML = '';
       historyData.forEach(d => {
-        const zjDiffJs = d.zj - d.js;
-        const zjDiffTj = d.zj - d.tj;
-        const jsDiffTj = d.js - d.tj;
-        const row = `
-          <tr class="border-b hover:bg-gray-50">
-            <td class="px-4 py-3 font-medium text-gray-800 text-xs">${d.major}</td>
-            <td class="px-4 py-3 text-center font-bold text-purple-600 text-sm">${d.zj}</td>
-            <td class="px-4 py-3 text-center font-bold text-red-600 text-sm">${d.js}</td>
-            <td class="px-4 py-3 text-center font-bold text-green-600 text-sm">${d.tj}</td>
-            <td class="px-4 py-3 text-center text-xs ${diffClass(d.zj, d.js)}">${zjDiffJs > 0 ? '+' : ''}${zjDiffJs}</td>
-            <td class="px-4 py-3 text-center text-xs ${diffClass(d.zj, d.tj)}">${zjDiffTj > 0 ? '+' : ''}${zjDiffTj}</td>
-            <td class="px-4 py-3 text-center text-xs ${diffClass(d.js, d.tj)}">${jsDiffTj > 0 ? '+' : ''}${jsDiffTj}</td>
+        tbody.innerHTML += `
+          <tr>
+            <td class="left">${d.major}</td>
+            <td class="province purple">${d.zj}</td>
+            <td class="province red">${d.js}</td>
+            <td class="province green">${d.tj}</td>
+            <td class="${diffClass(d.zj, d.js)}">${diffFmt(d.zj, d.js)}</td>
+            <td class="${diffClass(d.zj, d.tj)}">${diffFmt(d.zj, d.tj)}</td>
           </tr>
         `;
-        tbody.innerHTML += row;
       });
     }
 
-    // ========== CHART ==========
     function renderChart() {
       const top15 = physicsData.slice(0, 15);
-      const labels = top15.map(d => d.major.length > 8 ? d.major.substring(0, 8) + '…' : d.major);
-      const fullLabels = top15.map(d => d.major);
+      const labels = top15.map(d => d.major);
 
       const ctx = document.getElementById('mainChart').getContext('2d');
       new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: fullLabels,
+          labels,
           datasets: [
-            {
-              label: '浙江（综合）',
-              data: top15.map(d => d.zj),
-              backgroundColor: 'rgba(139, 92, 246, 0.75)',
-              borderRadius: 4,
-            },
-            {
-              label: '江苏（物理+化学）',
-              data: top15.map(d => d.js),
-              backgroundColor: 'rgba(239, 68, 68, 0.75)',
-              borderRadius: 4,
-            },
-            {
-              label: '天津（物理+化学）',
-              data: top15.map(d => d.tj),
-              backgroundColor: 'rgba(34, 197, 94, 0.75)',
-              borderRadius: 4,
-            },
+            { label: '浙江（综合）', data: top15.map(d => d.zj), backgroundColor: 'rgba(139,92,246,0.75)', borderRadius: 4 },
+            { label: '江苏（物理+化学）', data: top15.map(d => d.js), backgroundColor: 'rgba(239,68,68,0.75)', borderRadius: 4 },
+            { label: '天津（物理+化学）', data: top15.map(d => d.tj), backgroundColor: 'rgba(34,197,94,0.75)', borderRadius: 4 },
+            { label: '北京（物理+化学）', data: top15.map(d => d.bj), backgroundColor: 'rgba(234,88,12,0.75)', borderRadius: 4 },
           ]
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
+          maintainAspectRatio: true,
           plugins: {
             legend: { position: 'top' },
             tooltip: { mode: 'index', intersect: false }
           },
           scales: {
-            y: {
-              beginAtZero: false,
-              min: 560,
-              ticks: { stepSize: 10 }
-            },
-            x: {
-              ticks: { maxRotation: 45, minRotation: 45, font: { size: 11 } }
-            }
+            y: { beginAtZero: false, min: 560, ticks: { stepSize: 10 } },
+            x: { ticks: { maxRotation: 45, minRotation: 30, font: { size: 11 } } }
           }
         }
       });
     }
 
-    // ========== TAB SWITCH ==========
     function showTab(tab) {
       const physicsEl = document.getElementById('tab-physics');
       const historyEl = document.getElementById('tab-history');
@@ -315,17 +354,16 @@
       if (tab === 'physics') {
         physicsEl.classList.remove('hidden');
         historyEl.classList.add('hidden');
-        btnPhysics.className = 'px-5 py-2 rounded-full font-medium text-sm bg-blue-800 text-white';
-        btnHistory.className = 'px-5 py-2 rounded-full font-medium text-sm bg-gray-200 text-gray-600 hover:bg-gray-300';
+        btnPhysics.className = 'tab active-blue';
+        btnHistory.className = 'tab inactive';
       } else {
         physicsEl.classList.add('hidden');
         historyEl.classList.remove('hidden');
-        btnPhysics.className = 'px-5 py-2 rounded-full font-medium text-sm bg-gray-200 text-gray-600 hover:bg-gray-300';
-        btnHistory.className = 'px-5 py-2 rounded-full font-medium text-sm bg-orange-700 text-white';
+        btnPhysics.className = 'tab inactive';
+        btnHistory.className = 'tab active-orange';
       }
     }
 
-    // ========== INIT ==========
     renderPhysicsTable();
     renderHistoryTable();
     renderChart();
