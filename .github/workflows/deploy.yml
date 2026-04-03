@@ -23,4 +23,4 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           npm install -g wrangler
-          wrangler pages deploy . --project-name=ujs-compare --commit-message="${{ github.event.head_commit?.message || github.event.pull_request?.title || 'deploy' }}"
+          wrangler pages deploy . --project-name=ujs-compare 
